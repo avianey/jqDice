@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html> 
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>JQuery Dice plugin v1.0.0</title> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
+	<link rel="stylesheet" href="jquery.dice-1.0.0.css" />
+	<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="http://code.jquery.com/mobile/latest/jquery.mobile.js"></script>
+	<script src="jquery.dice-1.0.0.js"></script>
+	
+	<script type="text/javascript">
+		
+		var size = 0;
+		var rotation = 0;
+		var H = 0;
+		
+		roll = function() {
+			$("#die").dice({
+				size: parseInt($("input#size").val(), 10),
+				val: parseInt($("input#value").val(), 10),
+				rotation: parseInt($("input#rotation").val(), 10)
+			});
+			var h = (H - parseInt($("input#size").val(), 10)) / 2;
+			$("#die").css("margin-top", h + "px");
+			$("#die").css("margin-bottom", h + "px");
+		}
+		
+		$("#main").live("pageshow", function(event) {
+			$("#values").css("width", $(".ui-radio").outerWidth() * 6);
+			H = $(window).outerHeight() - $("#main #content").outerHeight() - $("div.ui-header").outerHeight() - $("div#options").outerHeight();
+			roll();
+		});
+		
+		$(function() {
+			$("input#size").change(function(e) {
+				if (size != this.value) {
+					roll();
+					size = this.value;
+				}
+				e.preventDefault();
+			});
+			$("input#rotation").change(function(e) {
+				if (size != this.value) {
+					roll();
+					size = this.value;
+				}
+				e.preventDefault();
+			});
+			$("input[type='radio']").click(function() {
+				$("input#value").val(this.value);
+				roll();
+			});
+		});
+	</script>
+	
+	<style type="text/css">
+	
+		.ui-header .ui-title {
+			margin-left: 0%;
+			margin-right: 0%;
+		}
+		
+		#content, body {
+			text-align: center;
+		}
+		
+		#values {
+			margin: auto;
+		}
+		
+		#die {
+			margin: auto;
+		}
+		
+		#options {
+			width: 100%;
+			position: absolute;
+			bottom: 0.5em;
+		}
+	
+	</style>
+	
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="b" id="main">
+	
+	<div data-role="header">
+		<h1>JQuery Dice plugin v1.0.0</h1>
+	</div>
+
+	<div data-role="content" id="content">
+	
+		<div id="die"></div>
+		
+	</div>
+		
+	<div id="options">
+		<label for="size">Value of the die :</label>
+		<fieldset data-role="controlgroup" data-type="horizontal" id="values">
+			<input type="hidden" id="value" value="1" />
+			<input type="radio" name="value" id="die-1" value="1" checked="checked" />
+			<label for="die-1">1</label>
+			<input type="radio" name="value" id="die-2" value="2" />
+			<label for="die-2">2</label>
+			<input type="radio" name="value" id="die-3" value="3" />
+			<label for="die-3">3</label>
+			<input type="radio" name="value" id="die-4" value="4" />
+			<label for="die-4">4</label>
+			<input type="radio" name="value" id="die-5" value="5" />
+			<label for="die-5">5</label>
+			<input type="radio" name="value" id="die-6" value="6" />
+			<label for="die-6">6</label>
+		</fieldset>
+		<hr/>
+		<label for="size">Size of the die :</label>
+		<input type="range" name="size" id="size" value="100" min="50" max="200" data-highlight="true" />
+		<hr/>
+		<label for="rotation">Rotation of the die :</label>
+		<input type="range" name="rotation" id="rotation" value="90" min="0" max="359" data-highlight="true" />
+	</div>
+	
+</div>
+
+</body>
+</html>
