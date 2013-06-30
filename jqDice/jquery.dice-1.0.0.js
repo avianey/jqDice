@@ -23,10 +23,12 @@ jQuery.fn.dice = function(userOptions) {
 	var options = {
 		size: 100,
 		val: Math.floor(Math.random() * 6) + 1,
-		rotation: 0
+		rotation: 0,
+        bgColor: '#FFFFFF',
+        indicatorBgColor: '#000000'
 	};
 	$.extend(options, userOptions);
-	
+
 	var SQRT = 1.41421356;
 	var POSITIONS = [
 		[[1,1]],
@@ -61,6 +63,14 @@ jQuery.fn.dice = function(userOptions) {
 		indicator.css("left", left + "px");
 		div.append(indicator);
 	}
+
+    var bgGradToColor = '#'+$(options.bgColor.match(/[^#]./g)).map(function(i,e) { return (("0" + (parseInt(e,16)).toString(16).toUpperCase()).slice(-2)); }).get().join('');
+    var bgGradFromColor = '#'+$(options.bgColor.match(/[^#]./g)).map(function(i,e) { var c = (parseInt(e,16)-10); return ("0" + ((c>0?c:0).toString(16).toUpperCase())).slice(-2); }).get().join('');
+    var bgShadeColor = '#'+$(options.bgColor.match(/[^#]./g)).map(function(i,e) { var c = (parseInt(e,16)-17); return ("0" + ((c>0?c:0).toString(16).toUpperCase())).slice(-2); }).get().join('');
+
+    var indicatorsBgColor = '#'+$(options.indicatorBgColor.match(/[^#]./g)).map(function(i,e) { return ("0" + ((parseInt(e,16)).toString(16).toUpperCase() )).slice(-2); }).get().join('');
+    var indicatorsInsetColor = '#'+$(options.indicatorBgColor.match(/[^#]./g)).map(function(i,e) { var c = (parseInt(e,16)+17); return ("0" + ((c<255?c:255).toString(16).toUpperCase())).slice(-2); }).get().join('');
+
 	var container = this.addClass("dice-container").append(div);
 	var indicators = div.find(".dice-indicator");
 	var x = 0;
@@ -86,15 +96,15 @@ jQuery.fn.dice = function(userOptions) {
 	div.css("border-radius", Math.round(15 * options.size / 100) + "px"); // base 15
 	div.css("-moz-border-radius", Math.round(15 * options.size / 100) + "px"); // base 15
 	div.css("-webkit-border-radius", Math.round(15 * options.size / 100) + "px"); // base 15
-	div.css("background", "-moz-linear-gradient(" + (45 + options.rotation) + "deg, #F6F6F6, #FFFFFF)");
-	div.css("background", "-webkit-linear-gradient(" + (45 + options.rotation) + "deg, #F6F6F6, #FFFFFF)");
+	div.css("background", "-moz-linear-gradient(" + (45 + options.rotation) + "deg, "+bgGradFromColor+", "+bgGradToColor+")");
+	div.css("background", "-webkit-linear-gradient(" + (45 + options.rotation) + "deg, "+bgGradFromColor+", "+bgGradToColor+")");
 	x = (indicatorHalfDim / 4 * Math.cos((45 + options.rotation) * Math.PI / 180));
 	y = -(indicatorHalfDim / 4 * Math.sin((45 + options.rotation) * Math.PI / 180));
 	x = Math.abs(x) < 0.01 ? 0 : x;
 	y = Math.abs(y) < 0.01 ? 0 : y;
-	div.css("-webkit-box-shadow", "inset " + x + "px " + y + "px 3px 3px #EEEEEE");
-	div.css("-moz-box-shadow", "inset " + x + "px " + y + "px 3px 3px #EEEEEE");
-	div.css("box-shadow", "inset " + x + "px " + y + "px 3px 3px #EEEEEE");
+	div.css("-webkit-box-shadow", "inset " + x + "px " + y + "px 3px 3px "+bgShadeColor);
+	div.css("-moz-box-shadow", "inset " + x + "px " + y + "px 3px 3px "+bgShadeColor);
+	div.css("box-shadow", "inset " + x + "px " + y + "px 3px 3px "+bgShadeColor);
 	
 	indicators.css("width", indicatorDim + "px"); // base 18
 	indicators.css("height", indicatorDim + "px"); // base 18
@@ -105,7 +115,13 @@ jQuery.fn.dice = function(userOptions) {
 	y = indicatorHalfDim + (indicatorHalfDim * Math.sin((135 - options.rotation) * Math.PI / 180));
 	x = Math.abs(x) < 0.01 ? 0 : x;
 	y = Math.abs(y) < 0.01 ? 0 : y;
-	indicators.css("background", "-webkit-radial-gradient(" + x + "px " + y + "px , circle, #FFFFFF, #000000, #000000)");
-	indicators.css("background", "-moz-radial-gradient(" + x + "px " + y + "px , circle, #FFFFFF, #000000, #000000)");
+
+    indicators.css("-webkit-box-shadow", "inset 0 0 1px 1px "+indicatorsInsetColor);
+    indicators.css("-moz-box-shadow", "inset 0 0 1px 1px "+indicatorsInsetColor);
+    indicators.css("box-shadow", "inset 0 0 1px 1px "+indicatorsInsetColor);
+    indicators.css("background",  indicatorsInsetColor);
+
+	indicators.css("background", "-webkit-radial-gradient(" + x + "px " + y + "px , circle, #FFFFFF, "+indicatorsBgColor+", "+indicatorsBgColor+")");
+	indicators.css("background", "-moz-radial-gradient(" + x + "px " + y + "px , circle, #FFFFFF, "+indicatorsBgColor+", "+indicatorsBgColor+")");
 
 };
